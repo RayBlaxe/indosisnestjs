@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model siswa {
+  id_siswa  String     @id @default(uuid())
+  siswa     String
+  alamat    String
+  id_ayahs   String     @unique
+  ayah      ayah       @relation(fields: [id_ayahs], references: [id_ayahs])
+  id_ibu    String     @unique
+  ibu       ibu        @relation(fields: [id_ibu], references: [id_ibu])
+  prestasi  prestasi[]
+  updateat  DateTime   @updatedAt
+  createdat DateTime   @default(now())
+}
+
+model ayah {
+  id_ayahs      String    @id @default(uuid())
+  ayah         String
+  siswa        siswa?
+  pekerjaan    pekerjaan @relation(fields: [id_pekerjaan], references: [id_pekerjaan])
+  id_pekerjaan String
+  updateat     DateTime  @updatedAt
+  createdat    DateTime  @default(now())
+}
+
+model ibu {
+  id_ibu       String    @id @default(uuid())
+  ibu          String
+  siswa        siswa?
+  pekerjaan    pekerjaan @relation(fields: [id_pekerjaan], references: [id_pekerjaan])
+  id_pekerjaan String
+  updateat     DateTime  @updatedAt
+  createdat    DateTime  @default(now())
+}
+
+model prestasi {
+  id_prestasi String   @id @default(uuid())
+  prestasi    String
+  deskripsi   String
+  tahun       DateTime
+  id_siswa    String   @unique
+  siswa       siswa    @relation(fields: [id_siswa], references: [id_siswa])
+  updateat    DateTime @updatedAt
+  createdat   DateTime @default(now())
+}
+
+model pekerjaan {
+  id_pekerjaan String   @id @default(uuid())
+  pekerjaan    String
+  deskripsi    String?
+  updateat     DateTime @updatedAt
+  createdat    DateTime @default(now())
+  ibu          ibu[]
+  ayah         ayah[]
+}
